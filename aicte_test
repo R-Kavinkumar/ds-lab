@@ -7,7 +7,7 @@ def Sort(inp):                                          #for sorting a two dimen
 cmd=['','','','','']          #for product form out of index error 
 Incomplete=[]                 #list for incomlete task with Priority.
 complete=[]                   #list for completed tasks
-with open("D:/text/task.txt","r") as f:  #updating Incompleted list from task.txt file
+with open("../task.txt","r") as f:  #updating Incompleted list from task.txt file
     for line in f:
         str_line=line.strip()
         pr=str_line.split()[0]
@@ -17,7 +17,7 @@ with open("D:/text/task.txt","r") as f:  #updating Incompleted list from task.tx
                 txt+=j+' '
         Incomplete.append([txt.strip(),pr])
 
-with open("D:/text/completed.txt","r") as f:   #updating completed list from completed.txt file
+with open("../completed.txt","r") as f:   #updating completed list from completed.txt file
     for line in f:
         complete.append(line.strip())
 
@@ -31,7 +31,7 @@ for i,j in enumerate(sys.argv):                 #all command line arugments are 
 
 
 if len(sys.argv)==1 or cmd[1]=="help":                   #for help or empty command
-    print( 'task help\nUsage :-\ntask add 2 hello world    # Add a new item with priority 2 and text "hello world" to the list\ntask ls                   # Show incomplete priority list items sorted by priority in ascending order\ntask del INDEX            # Delete the incomplete item with the given index\ntask done INDEX           # Mark the incomplete item with the given index as complete\ntask help                 # Show usage\ntask report               # Statistics');
+    print("Usage :-\n$ ./task add 2 hello world    # Add a new item with priority 2 and text \"hello world\" to the list\n$ ./task ls                   # Show incomplete priority list items sorted by priority in ascending order\n$ ./task del INDEX            # Delete the incomplete item with the given index\n$ ./task done INDEX           # Mark the incomplete item with the given index as complete\n$ ./task help                 # Show usage\n$ ./task report               # Statistics");
 
 
 
@@ -50,17 +50,26 @@ if cmd[1]=="add" and cmd[2].isdigit() and cmd[3]!='':      #for Add process
         if j !='':
             b+=j
     Incomplete.append([b,cmd[2]])
-    print('Added task:',Incomplete[-1][0], 'with priority',Incomplete[-1][1])
+    print('Added task: \"'+str(Incomplete[-1][0])+ '\" with priority',Incomplete[-1][1])
+elif(cmd[1]=="add" and cmd[2]==''):
+	print("Error: Missing tasks string. Nothing added!")
 
 
-if cmd[1]=="del" and int(cmd[2])<=len(Incomplete):         #for Delete process
+
+if cmd[1]=="del" and cmd[2]!='' and int(cmd[2])<=len(Incomplete):    #for Delete process     
     try:
         for i,j in enumerate(Incomplete):
             if(j[0]==Sort(num_incomplete)[int(cmd[2][0])-1][0])and(str(j[1])==str(Sort(num_incomplete)[int(cmd[2][0])-1][1])):
                 Incomplete.pop(i)
-                print("Deleted item with index ",cmd[2])
+                print("Deleted task #"+str(cmd[2])+"does not exist. Nothing deleted.")
+                
+                break;
     except:
-        print("Error: item with index ",cmd[2]," does not exist. Nothing deleted.");
+        print("Error: item with index "+str(cmd[2])+" does not exist. Nothing deleted.");
+        
+elif(cmd[1]=="del" and cmd[2]==''):
+	print("Error: Missing NUMBER for deleting tasks.")
+
 if cmd[1]=="done" and cmd[2]:                           #for mark as done process
     try:
         for i,j in enumerate(Incomplete):
@@ -68,9 +77,11 @@ if cmd[1]=="done" and cmd[2]:                           #for mark as done proces
                 Incomplete.pop(i)
                 complete.append(j[0])
                 print('Marked item as done.')
+                break;
     except :
-        print("Error: no incomplete item with index ",cmd[2]," exists");
-
+        print("Error: no incomplete item with index "+str(cmd[2])+" exists");
+elif cmd[1]=="done"and cmd[2]=='':
+	print("Error: Missing NUMBER for marking tasks as done.")
 
 
 
@@ -89,12 +100,12 @@ if cmd[1]=="report":                                      #for report command
         for i,j in enumerate(complete):
             print(str(i+1)+'.'+j);
             
-with open("D:/text/task.txt",'w') as tfile:                        # updating text file
+with open("../task.txt",'w') as tfile:                        # updating text file
     if len(Incomplete)>0:
         for i in Incomplete:
             tfile.write(str(i[1])+' '+str(i[0]+'\n'))
 
-with open('D:/text/completed.txt','w') as tfile:                    # updating text file
+with open('../completed.txt','w') as tfile:                    # updating text file
     if len(complete)>0:
         for i in complete:
             tfile.write(str(i)+'\n')

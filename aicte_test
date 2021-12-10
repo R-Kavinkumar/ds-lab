@@ -1,0 +1,94 @@
+import sys                    #import required modules
+
+
+cmd=['','','','','']          #for product form out of index error 
+Incomplete=[]                 #list for incomlete task with Priority.
+complete=[]                   #list for completed tasks
+
+
+with open("task.txt","r") as f:  #updating Incompleted list from task.txt file
+    for line in f:
+        str_line=line.strip()
+        pr=str_line.split()[0]
+        txt=''
+        for i,j in enumerate(str_line.split()):
+            if i!=0:
+                txt+=j
+        Incomplete.append([txt,pr])
+
+with open("completed.txt","r") as f:   #updating completed list from completed.txt file
+    for line in f:
+        complete.append(line.strip())
+
+
+
+for i,j in enumerate(sys.argv):                 #all command line arugments are append to cmd
+    cmd.insert(i,j)                 
+
+
+if len(sys.argv)==1 or cmd[1]=="help":                   #for help or empty command
+    print("task help")
+    print("Usage :-")
+    print( ' task add 2 hello world    # Add a new item with priority 2 and text "hello world" to the list\n\ttask ls                   # Show incomplete priority list items sorted by priority in ascending order\n\ttask del INDEX            # Delete the incomplete item with the given index\n\ttask done INDEX           # Mark the incomplete item with the given index as complete\n\ttask help                 # Show usage\n\ttask report               # Statistics');
+
+
+if cmd[1]=="ls":                    #for ls command
+    for i,j in enumerate(Incomplete):
+        a=""
+        for k in j[0:-1]:
+            a+=" "
+            a+=k            
+        print(str(i+1)+'.'+a+' ['+str(j[-1])+']');
+
+
+if cmd[1]=="add" and cmd[2].isdigit() and cmd[3]!='':      #for Add process
+    b=''
+    for j in cmd[3:-1]:
+        if j !='':
+            b+=j
+    Incomplete.append([b,cmd[2]])
+    print('Added task:',Incomplete[-1][0], 'with priority',Incomplete[-1][1])
+
+
+if cmd[1]=="del" and int(cmd[2])<=len(Incomplete):         #for Delete process
+    if(int(cmd[2])<=len(Incomplete)):
+        pass
+    else:
+        print("Error: item with index ",cmd[2]," does not exist. Nothing deleted.");
+    Incomplete.pop(int(cmd[2])-1)
+    print("Deleted item with index ",cmd[2])
+    
+if cmd[1]=="done" and cmd[2]:                           #for mark as done process
+    try:
+        complete.append(Incomplete.pop(int(cmd[2][0])-1)[0])
+        print('Marked item as done.')
+    except :
+        print("Error: no incomplete item with index ",cmd[2]," exists");
+
+
+def Sort(inp):                                          #for sorting a two dimensional array respect with second element 
+	return(sorted(inp, key = lambda x: x[1]))
+
+if cmd[1]=="report":                                      #for report command
+    print("pending : ",len(Incomplete))
+    if len(complete)>0:
+        for i,j in enumerate(Sort(Incomplete)):
+            a=""
+            for k in j[0:-1]:
+                a+=" "
+                a+=k            
+            print(str(i+1)+'.'+a+' ['+str(j[-1])+']');
+    print("completed : ",len(complete))
+    if len(complete)>0:
+        for i,j in enumerate(complete):
+            print(str(i+1)+'.'+j);
+            
+with open('task.txt','w') as tfile:                        # updating text file
+    if len(Incomplete)>0:
+        for i in Incomplete:
+            tfile.write(str(i[1])+' '+str(i[0]+'\n'))
+
+with open('completed.txt','w') as tfile:                    # updating text file
+    if len(complete)>0:
+        for i in complete:
+            tfile.write(str(i)+'\n')

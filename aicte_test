@@ -7,15 +7,15 @@ complete=[]                   #list for completed tasks
 def Sort(inp):                                          #for sorting a two dimensional array respect with second element 
 	return(sorted(inp, key = lambda x:x[1]))
 
-with open("task.txt","r") as f:  #updating Incompleted list from task.txt file
+with open("D:/text/task.txt","r") as f:  #updating Incompleted list from task.txt file
     for line in f:
         str_line=line.strip()
         pr=str_line.split()[0]
         txt=''
         for i,j in enumerate(str_line.split()):
             if i!=0:
-                txt+=j
-        Incomplete.append([txt,pr])
+                txt+=j+' '
+        Incomplete.append([txt.strip(),pr])
 
 with open("completed.txt","r") as f:   #updating completed list from completed.txt file
     for line in f:

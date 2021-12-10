@@ -4,7 +4,8 @@ import sys                    #import required modules
 cmd=['','','','','']          #for product form out of index error 
 Incomplete=[]                 #list for incomlete task with Priority.
 complete=[]                   #list for completed tasks
-
+def Sort(inp):                                          #for sorting a two dimensional array respect with second element 
+	return(sorted(inp, key = lambda x:x[1]))
 
 with open("task.txt","r") as f:  #updating Incompleted list from task.txt file
     for line in f:
@@ -19,7 +20,10 @@ with open("task.txt","r") as f:  #updating Incompleted list from task.txt file
 with open("completed.txt","r") as f:   #updating completed list from completed.txt file
     for line in f:
         complete.append(line.strip())
-
+num_incomplete=[]                   #list for numeric second value
+for i in Incomplete:
+    num_incomplete.append([i[0],int(i[1])])
+print(num_incomplete)
 
 
 for i,j in enumerate(sys.argv):                 #all command line arugments are append to cmd
